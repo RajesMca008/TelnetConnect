@@ -1,20 +1,3 @@
-/*
- * ConnectBot: simple, powerful, open-source SSH client for Android
- * Copyright 2007 Kenny Root, Jeffrey Sharkey
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.connectbot.transport;
 
 import java.io.IOException;
@@ -32,6 +15,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.connectbot.HostListActivity;
 import org.connectbot.R;
 import org.connectbot.bean.HostBean;
 import org.connectbot.service.TerminalBridge;
@@ -42,13 +26,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 import de.mud.telnet.TelnetProtocolHandler;
 
+/**
+ * Telnet transport implementation.<br/>
+ * Original idea from the JTA telnet package (de.mud.telnet)
+ *
+ * @author Kenny Root
+ *
+ */
 public class Telnet extends AbsTransport {
 	private static final String TAG = "CB.Telnet";
 	private static final String PROTOCOL = "telnet";
 
 	private static final int DEFAULT_PORT = 23;
+	private static Context mContext=null;
 
 	private TelnetProtocolHandler handler;
 	private Socket socket;
@@ -149,6 +142,8 @@ public class Telnet extends AbsTransport {
 			os = socket.getOutputStream();
 
 			bridge.onConnected();
+
+			Log.i("TEST","Connected....");
 		} catch (UnknownHostException e) {
 			Log.d(TAG, "IO Exception connecting to host", e);
 		} catch (IOException e) {
@@ -190,6 +185,7 @@ public class Telnet extends AbsTransport {
 
 
 	int tempWait=0;
+	int minValue=50;
 	@Override
 	public int read(byte[] buffer, int start, int len) throws IOException {
 		/* process all already read bytes */
@@ -207,6 +203,7 @@ public class Telnet extends AbsTransport {
 
 		Log.e("TEST",": lines"+lines.length);
 
+
 		for (int i=0;i<lines.length;i++)
 		{
 			boolean  isNumeric=lines[i].split(",")[0].matches("-?\\d+(\\.\\d+)?");
@@ -215,7 +212,7 @@ public class Telnet extends AbsTransport {
 
 			if(isNumeric)
 			{
-				int updateWait=Integer.parseInt(lines[i].split(",")[0]);
+				/*int updateWait=Integer.parseInt(lines[i].split(",")[0]);
 				if(tempWait<updateWait)
 				{
 					tempWait=updateWait;
@@ -223,11 +220,47 @@ public class Telnet extends AbsTransport {
 					VechileData date=new VechileData();
 					date.setWeight(tempWait);
 					vechileDataArrayList.add(date);
+				}*/
+
+				int updateWait=Integer.parseInt(lines[i].split(",")[0]);
+
+				//Log.i("TEST","onProgressChanged" +updateWait);
+
+				if(minValue<updateWait )
+				{
+					if(updateWait>tempWait)
+						tempWait=updateWait;
+
+				}else {
+
+					if(tempWait>minValue) {
+						VechileData date = new VechileData();
+						date.setWeight(tempWait);
+						vechileDataArrayList.add(date);
+						Log.i("TEST", "For loop break.........." + tempWait);
+						tempWait = 0;
+						//break;
+					}
 				}
 			}
+
+
 		}
 
 		Log.e("TEST",":No.of :::::::"+vechileDataArrayList.size());
+		for(int j =0;j<vechileDataArrayList.size();j++)
+		{
+			Log.e("TEST",":Weight Max :::::::"+vechileDataArrayList.get(j).getWeight());
+		}
+
+		if(HostListActivity.vehicleAxle==vechileDataArrayList.size())
+		{
+
+			Toast.makeText(mContext,"Done ! weight"+vechileDataArrayList.get(1).getWeight(),Toast.LENGTH_LONG).show();
+		}else {
+			Toast.makeText(mContext,"Waiting for next count",Toast.LENGTH_LONG).show();
+		}
+
 		do {
 			n = handler.negotiate(buffer, start);
 			if (n > 0)
@@ -371,9 +404,12 @@ public class Telnet extends AbsTransport {
 	}
 
 	public static String getFormatHint(Context context) {
+		mContext=context;
 		return String.format("%s:%s",
 				context.getString(R.string.format_hostname),
 				context.getString(R.string.format_port));
+
+
 	}
 
 	/* (non-Javadoc)

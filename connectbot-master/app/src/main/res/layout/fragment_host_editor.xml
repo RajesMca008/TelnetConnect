@@ -6,6 +6,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:fillViewport="true"
 	tools:context="org.connectbot.HostEditorFragment"
+	android:background="@drawable/bg_new"
 	>
 
 	<LinearLayout
@@ -204,19 +205,36 @@
 
 		</RelativeLayout>
 
-		<RelativeLayout
+		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_gravity="center_horizontal"
+			android:orientation="vertical"
 			android:layout_height="wrap_content">
 
+			<TextView
+
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="15dp"
+				android:layout_marginBottom="5dp"
+				android:textColor="#ffffff"
+				android:text="@string/type"
+				android:layout_gravity="left"
+				android:layout_width="match_parent"
+				android:drawableLeft="@drawable/ic_code"
+				android:gravity="center_vertical"
+				android:drawablePadding="15dp"
+				android:layout_height="wrap_content"/>
 			<Spinner
 
+				android:layout_gravity="right"
+				android:prompt="@string/type"
 				android:layout_margin="10dp"
-				android:layout_width="match_parent"
+				android:layout_width="300dp"
 				android:id="@+id/vehicle_select"
+				android:theme="@style/ThemeSpinner"
 				android:entries="@array/vehicle_select"
 				android:layout_height="wrap_content"/>
-		</RelativeLayout>
+		</LinearLayout>
 
 
 

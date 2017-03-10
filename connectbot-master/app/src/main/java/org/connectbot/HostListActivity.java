@@ -86,6 +86,9 @@ public class HostListActivity extends AppCompatListActivity implements OnHostSta
 
 	private boolean waitingForDisconnectAll = false;
 
+
+	public static int vehicleAxle=2;
+
 	/**
 	 * Whether to close the activity when disconnectAll is called. True if this activity was
 	 * only brought to the foreground via the notification button to disconnect all hosts.

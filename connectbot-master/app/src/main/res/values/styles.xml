@@ -28,6 +28,12 @@
 		<item name="colorAccent">@color/accent</item>
 	</style>
 
+	<style name="ThemeSpinner">
+		<!-- Color when pressed -->
+		<item name="colorAccent">#ffa000</item>
+		<!-- Default color for the dropdown arrow and line -->
+		<item name="colorControlNormal">#ffc107</item>
+	</style>
 	<style name="KeyboardKey">
 		<item name="android:layout_width">45dip</item>
 		<item name="android:layout_height">30dip</item>

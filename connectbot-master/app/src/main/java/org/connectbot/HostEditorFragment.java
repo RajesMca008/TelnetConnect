@@ -32,14 +32,17 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.connectbot.bean.HostBean;
@@ -48,6 +51,8 @@ import org.connectbot.transport.Telnet;
 import org.connectbot.transport.TransportFactory;
 import org.connectbot.util.HostDatabase;
 import org.connectbot.views.CheckableMenuItem;
+
+import static org.connectbot.HostListActivity.vehicleAxle;
 
 public class HostEditorFragment extends Fragment {
 
@@ -128,6 +133,7 @@ public class HostEditorFragment extends Fragment {
 	private CheckableMenuItem mCloseOnDisconnectSwitch;
 	private EditText mPostLoginAutomationField;
 	private HostTextFieldWatcher mFontSizeTextChangeListener;
+	private Spinner mSpinner;
 
 	public static HostEditorFragment newInstance(
 			HostBean existingHost, ArrayList<String> pubkeyNames, ArrayList<String> pubkeyValues) {
@@ -478,6 +484,28 @@ public class HostEditorFragment extends Fragment {
 				new HostTextFieldWatcher(HostDatabase.FIELD_HOST_POSTLOGIN));
 
 		setUriPartsContainerExpanded(mIsUriEditorExpanded);
+
+
+		//Logic for validating Vehicle selection
+
+		mSpinner=(Spinner)view.findViewById(R.id.vehicle_select);
+
+		mSpinner.setSelection(1);
+
+
+
+		mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+				Log.i("TEST","Vehicle Axle "+(i+1));
+				vehicleAxle=(i+1);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+
+			}
+		});
 
 		return view;
 	}
