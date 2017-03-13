@@ -26,7 +26,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
+
 import de.mud.telnet.TelnetProtocolHandler;
 
 /**
@@ -53,7 +53,7 @@ public class Telnet extends AbsTransport {
 
 	private boolean connected = false;
 
-	ArrayList<VechileData> vechileDataArrayList=new ArrayList<>();
+	public static ArrayList<VechileData> vechileDataArrayList=new ArrayList<>();
 
 	static final Pattern hostmask;
 	static {
@@ -185,7 +185,7 @@ public class Telnet extends AbsTransport {
 
 
 	int tempWait=0;
-	int minValue=50;
+	int MIN_VALUE =50;
 	@Override
 	public int read(byte[] buffer, int start, int len) throws IOException {
 		/* process all already read bytes */
@@ -226,14 +226,14 @@ public class Telnet extends AbsTransport {
 
 				//Log.i("TEST","onProgressChanged" +updateWait);
 
-				if(minValue<updateWait )
+				if(MIN_VALUE <updateWait )
 				{
 					if(updateWait>tempWait)
 						tempWait=updateWait;
 
 				}else {
 
-					if(tempWait>minValue) {
+					if(tempWait> MIN_VALUE) {
 						VechileData date = new VechileData();
 						date.setWeight(tempWait);
 						vechileDataArrayList.add(date);
@@ -256,9 +256,11 @@ public class Telnet extends AbsTransport {
 		if(HostListActivity.vehicleAxle==vechileDataArrayList.size())
 		{
 
-			Toast.makeText(mContext,"Done ! weight"+vechileDataArrayList.get(1).getWeight(),Toast.LENGTH_LONG).show();
+			Log.e("TEST","Done ! weight"+vechileDataArrayList.get(1).getWeight());
+			//Toast.makeText(mContext,"Done ! weight"+vechileDataArrayList.get(1).getWeight(),Toast.LENGTH_LONG).show();
 		}else {
-			Toast.makeText(mContext,"Waiting for next count",Toast.LENGTH_LONG).show();
+			//Toast.makeText(mContext,"Waiting for next count",Toast.LENGTH_LONG).show();
+			Log.e("TEST","Waiting for next count");
 		}
 
 		do {

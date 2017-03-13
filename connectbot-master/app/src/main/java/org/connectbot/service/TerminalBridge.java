@@ -24,15 +24,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.connectbot.HostListActivity;
 import org.connectbot.R;
 import org.connectbot.TerminalView;
 import org.connectbot.bean.HostBean;
 import org.connectbot.bean.PortForwardBean;
 import org.connectbot.bean.SelectionArea;
 import org.connectbot.transport.AbsTransport;
+import org.connectbot.transport.Telnet;
 import org.connectbot.transport.TransportFactory;
 import org.connectbot.util.HostDatabase;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -42,6 +45,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
 import android.text.ClipboardManager;
+import android.text.style.TtsSpan;
 import android.util.Log;
 import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.VDUDisplay;
@@ -278,6 +282,8 @@ public class TerminalBridge implements VDUDisplay {
 		}
 
 		outputLine(manager.res.getString(R.string.terminal_connecting, host.getHostname(), host.getPort(), host.getProtocol()));
+
+
 
 		Thread connectionThread = new Thread(new Runnable() {
 			public void run() {
@@ -716,6 +722,17 @@ public class TerminalBridge implements VDUDisplay {
 
 	public void onDraw() {
 		int fg, bg;
+
+
+		if( Telnet.vechileDataArrayList.size()>= HostListActivity.vehicleAxle)
+		{
+			Log.d("TEST","onDraw"+ Telnet.vechileDataArrayList.get(Telnet.vechileDataArrayList.size()-1).getWeight());
+			Telnet.vechileDataArrayList.clear();
+			((Activity) parent.getContext()).finish();
+
+			return;
+		}
+
 		synchronized (buffer) {
 			boolean entireDirty = buffer.update[0] || fullRedraw;
 			boolean isWideCharacter = false;
